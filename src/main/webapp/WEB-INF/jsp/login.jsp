@@ -29,22 +29,21 @@
 	<div class="container">
 
 		<form id="loginForm" action="${APP_PATH }/doLogin.do" method="POST" class="form-signin" role="form">
+			${exception.message }
 			<h2 class="form-signin-heading">
-				${exception.message }
-				<i class="glyphicon glyphicon-log-in"></i> 用户登录
-			</h2>
+				<i class="glyphicon glyphicon-log-in"></i> 用户登录</h2>
 			<div class="form-group has-success has-feedback">
-				<input type="text" class="form-control" id="inputSuccess4"
+				<input type="text" class="form-control" id="floginacct"
 					name="loginacct" placeholder="请输入登录账号" autofocus> <span
 					class="glyphicon glyphicon-user form-control-feedback"></span>
 			</div>
 			<div class="form-group has-success has-feedback">
-				<input type="password" class="form-control" id="inputSuccess4"
+				<input type="password" class="form-control" id="fuserpswd"
 					name="userpswd" placeholder="请输入登录密码" style="margin-top: 10px;"> <span
 					class="glyphicon glyphicon-lock form-control-feedback"></span>
 			</div>
 			<div class="form-group has-success has-feedback">
-				<select class="form-control" name="type">
+				<select id="ftype" class="form-control" name="type">
 					<option value="member">会员</option>
 					<option value="user">管理</option>
 				</select>
@@ -62,9 +61,51 @@
 	</div>
 	<script src="${APP_PATH }/jquery/jquery-2.1.1.min.js"></script>
 	<script src="${APP_PATH }/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="${APP_PATH }/jquery/layer/layer.js "></script>
 	<script>
-    function dologin() {
-        $("#loginForm").submit();
+    function dologin(){
+
+        var floginacct = $("#floginacct");
+        var fuserpswd = $("#fuserpswd");
+        var ftype = $("#ftype");
+
+        if($.trim(floginacct.val()) == ""){
+        	// alert("用户账号不能为空,请重新输入!");
+        	layer.msg("用户账号不能为空,请重新输入!", {time:1000, icon:5, shift:6}, function(){
+        		floginacct.val("");
+            	floginacct.focus();
+        	});
+          return false;
+        }
+        
+        var loadingIndex = -1;
+        
+        $.ajax({
+			type : "POST",
+		data : {
+		    "loginacct" : floginacct.val(),
+			"userpswd" : fuserpswd.val(),
+			"type" : ftype.val()
+			},
+			url : "${APP_PATH}/doLogin.do",
+			beforeSend : function(){
+				loadingIndex = layer.msg('处理中', {icon: 16});
+				//一般做表单数据校验.
+                return true ;
+            },
+			success : function(result){
+				layer.close(loadingIndex);
+				if(result.success){
+				    window.location.href="${APP_PATH}/main.htm";
+				}else{
+				 layer.msg(result.message, {time:1000, icon:5, shift:6});
+				}
+            },
+			error : function(){
+				layer.msg("登陆失败!", {time:1000, icon:5, shift:6});
+			}
+		});
+ //       $("#loginForm").submit();
 //        var type = $(":selected").val();
 //        if ( type == "user" ) {
 //            window.location.href = "main.html";
