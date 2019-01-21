@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -64,12 +64,10 @@
                     <form role="form" class="form-inline">
                         <div class="form-group">
                             <label for="exampleInputPassword1">未分配角色列表</label><br>
-                            <select id="leftRoleList" class="form-control" multiple size="10" style="width:100px;overflow-y:auto;">
-                                <option value="pm">PM</option>
-                                <option value="sa">SA</option>
-                                <option value="se">SE</option>
-                                <option value="tl">TL</option>
-                                <option value="gl">GL</option>
+                            <select id="leftRoleList" class="form-control" multiple size="10" style="width:250px;overflow-y:auto;">
+                               <c:forEach items="${leftRoleList }" var="role">
+                                <option value="${role.id }">${role.name }</option>
+                               </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">
@@ -81,10 +79,10 @@
                         </div>
                         <div class="form-group" style="margin-left:40px;">
                             <label for="exampleInputPassword1">已分配角色列表</label><br>
-                            <select id="rightRoleList" class="form-control" multiple size="10" style="width:100px;overflow-y:auto;">
-                                <option value="qa">QA</option>
-                                <option value="qc">QC</option>
-                                <option value="pg">PG</option>
+                            <select id="rightRoleList" class="form-control" multiple size="10" style="width:250px;overflow-y:auto;">
+                                <c:forEach items="${rightRoleList }" var="role">
+                                    <option value="${role.id }">${role.name }</option>
+                                </c:forEach>
                             </select>
                         </div>
                     </form>
@@ -122,6 +120,7 @@
 <script src="${APP_PATH}/jquery/jquery-2.1.1.min.js"></script>
 <script src="${APP_PATH}/bootstrap/js/bootstrap.min.js"></script>
 <script src="${APP_PATH}/script/docs.min.js"></script>
+<script type="text/javascript" src="${APP_PATH }/jquery/layer/layer.js"></script>
 <script type="text/javascript">
     $(function () {
         $(".list-group-item").click(function(){
@@ -136,18 +135,77 @@
         });
     });
 
+    //分配角色
     $("#leftToRightBtn").click(function () {
         var selectedOptions = $("#leftRoleList option:selected");
 
-        $("#rightRoleList").append(selectedOptions.clone());
-        selectedOptions.remove();
+        var jsonObj = {
+            userid : "${param.id}"
+        };
+
+        $.each(selectedOptions, function (i,n) {
+            jsonObj["ids["+i+"]"] = this.value ;
+        });
+
+        var index = -1 ;
+        $.ajax({
+            type : "POST",
+            data : jsonObj,
+            url : "${APP_PATH}/user/doAssignRole.do",
+            beforeSend : function () {
+                index = layer.load(2, {time: 10*1000});
+                return true;
+            },
+            success : function (result) {
+                layer.close(index);
+                if(result.success){
+                    $("#rightRoleList").append(selectedOptions.clone());
+                    selectedOptions.remove();
+                }else{
+                    layer.msg(result.message, {time:1000, icon:5, shift:6});
+                }
+            },
+            error : function () {
+                layer.msg("操作失败!", {time:1000, icon:5, shift:6});
+            }
+        });
+
     });
 
+    //取消角色
     $("#rightToLeftBtn").click(function () {
         var selectedOptions = $("#rightRoleList option:selected");
 
-        $("#leftRoleList").append(selectedOptions.clone());
-        selectedOptions.remove();
+        var jsonObj = {
+            userid : "${param.id}"
+        };
+
+        $.each(selectedOptions, function (i,n) {
+            jsonObj["ids["+i+"]"] = this.value ;
+        });
+
+        var index = -1 ;
+        $.ajax({
+            type : "POST",
+            data : jsonObj,
+            url : "${APP_PATH}/user/doUnAssignRole.do",
+            beforeSend : function () {
+                index = layer.load(2, {time: 10*1000});
+                return true;
+            },
+            success : function (result) {
+                layer.close(index);
+                if(result.success){
+                    $("#leftRoleList").append(selectedOptions.clone());
+                    selectedOptions.remove();
+                }else{
+                    layer.msg(result.message, {time:1000, icon:5, shift:6});
+                }
+            },
+            error : function () {
+                layer.msg("操作失败!", {time:1000, icon:5, shift:6});
+            }
+        });
 
     });
 
