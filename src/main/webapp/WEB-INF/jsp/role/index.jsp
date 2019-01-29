@@ -1,5 +1,5 @@
-<%@page pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -192,7 +192,7 @@ table tbody td:nth-child(even) {
 								content+="	<td><input type='checkbox' value='"+n.id+"'></td>";
 								content+="	<td>"+n.name+"</td>";
 								content+="	<td>";
-								content+="		<button type='button' onclick='window.location.href=\"${APP_PATH}/role/assign.htm?roleid="+n.id+"\"' class='btn btn-success btn-xs'>";
+								content+="		<button type='button' onclick='window.location.href=\"${APP_PATH}/role/assignPermission.htm?roleid="+n.id+"\"' class='btn btn-success btn-xs'>";
 								content+="			<i class=' glyphicon glyphicon-check'></i>";
 								content+="		</button>";
 								content+="		<button type='button' onclick='window.location.href=\"${APP_PATH}/role/edit.htm?pageno="+pageObj.pageno+"&id="+n.id+"\"' class='btn btn-primary btn-xs'>";

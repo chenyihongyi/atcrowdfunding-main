@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
@@ -126,7 +125,7 @@
 					},
 					async: {
 						enable: true,
-						url:"${APP_PATH}/permission/loadDataAsync.do?roleid=${param.roleid}",
+						url:"${APP_PATH}/role/loadDataAsync.do?roleid=${param.roleid}",
 						autoParam:["id", "name=n", "level=lv"]
 					},
 					callback: {
@@ -183,11 +182,6 @@
     		            	}
     		            });
     				}
-    						
-    					
-    				 
-    			
-            	
             });
             
         </script>

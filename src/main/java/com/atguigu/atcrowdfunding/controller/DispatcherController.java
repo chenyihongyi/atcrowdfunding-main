@@ -73,7 +73,7 @@ public class DispatcherController {
 			result.setSuccess(false);
 		}
 		return result;
-			// TODO day03 part12 14:00
+
 	}
 
 /*	//同步请求

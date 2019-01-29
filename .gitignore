@@ -22,7 +22,7 @@
 *.ipr
 *.iml
 *.iws
-
+git
 # temp file
 *.log
 *.cache
