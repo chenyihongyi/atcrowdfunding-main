@@ -172,7 +172,7 @@
     			layer.close(loadingIndex);
     			if(result.success){
     				var page = result.page ;
-    				var data = page.datas ;
+    				var data = page.data ;
 
       				var content = '';
     				
